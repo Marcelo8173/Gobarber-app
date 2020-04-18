@@ -1,8 +1,12 @@
 import { Router, request, response } from 'express';
 import userService from '../services/CreateUSerService';
+import ensureAthentication from '../middlewares/ensureAthentication';
+import multer from 'multer';
+import uploadConfig from '../config/upload'; 
+import UpdateAvatarUserService from '../services/updateUserAvatar';
 
 const userRouter = Router();
-
+const upload = multer(uploadConfig);
 
 //rota principal de criar
 userRouter.post('/', async (request, response) =>{
@@ -27,5 +31,20 @@ userRouter.post('/', async (request, response) =>{
     
 })
 
+userRouter.patch('/avatar', ensureAthentication, upload.single('avatar') , async (request, response) =>{
+    try {
+        const updateAvatar = new UpdateAvatarUserService();
+        const user = await updateAvatar.execute({
+            user_id: request.user.id,
+            avatarFilename: request.file.filename,
+        });
+
+        delete user.password;
+
+        return response.json(user);
+    } catch (err) {
+        return response.status(400).json({error: err.message})
+    }
+}); 
 
 export default userRouter;
