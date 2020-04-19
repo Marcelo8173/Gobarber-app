@@ -1,6 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import {verify} from 'jsonwebtoken';
 import authConfig from '../config/Auth';
+import AppError from '../error/AppError';
 
 interface TokenPayLoad{
     iat: number,
@@ -16,7 +17,7 @@ export default function ensureAthentication(request: Request,
     
 
     if(!authHeader){
-        throw new Error('token is missing');
+        throw new AppError('token is missing', 401);
     };
 
 
@@ -33,6 +34,6 @@ export default function ensureAthentication(request: Request,
         
         return netx();
     } catch (err) {
-        throw new Error('Invalid token jwt');
+        throw new AppError('Invalid token jwt', 401);
     }
 }

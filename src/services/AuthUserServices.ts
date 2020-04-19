@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm'
 import { sign } from 'jsonwebtoken';
 import authConfig from '../config/Auth';
 import User from '../models/User';
-
+import AppError from '../error/AppError';
 
 interface RequestDTO{
     email: string,
@@ -28,14 +28,14 @@ class AuthUserServices{
         });
 
         if(!user){
-            throw new Error('Incorrect email/password combination');
+            throw new AppError('Incorrect email/password combination', 401);
         };
 
         //senha criptografada user.password
         const passwordMatched = await compare(password, user.password);
 
         if(!passwordMatched){
-            throw new Error('Incorrect email/password combination');
+            throw new AppError('Incorrect email/password combination', 401);
         };
 //gerando o token de autenticação
         const token = sign({}, authConfig.jwt.secret,{
