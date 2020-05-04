@@ -1,4 +1,4 @@
-import Appointment from '../models/Appoitments';
+import Appointment from '@modules/appointments/infra/typeorm/entities/Appoitments';
 import { Repository, EntityRepository } from 'typeorm';
 //as funçoes que vão mexer com os dados
 

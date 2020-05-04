@@ -1,10 +1,9 @@
-import { Request } from "express";
 import path from 'path';
 import {getRepository} from 'typeorm';
 import fs from 'fs';
-import uploadConfig from '../config/upload';
-import User from '../models/User';
-import AppError from '../error/AppError';
+import uploadConfig from '@config/upload';
+import User from '@modules/users/infra/typeorm/entities/User';
+import AppError from '@shared/error/AppError';
 
 interface RequestDTO{
     user_id: string,
