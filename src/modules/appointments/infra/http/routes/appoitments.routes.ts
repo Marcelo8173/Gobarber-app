@@ -1,12 +1,11 @@
 import { Router, request, response } from 'express';
-import {parseISO} from 'date-fns';
-import { container } from 'tsyringe';
-import CreateAppointmentsServices from '@modules/appointments/services/CreateAppointmentsServices';
+import AppointmentsController from '@modules/appointments/infra/http/controllers/AppointmentController';
+
 
 import ensureAthentication from '@modules/users/infra/http/middlewares/ensureAthentication';
 
 const appointmentsRouter = Router();
-
+const appointmentsController = new AppointmentsController();
 //Rota: receber uma requisição, chamar outro arquivo e devolver uma resposta 
 
 appointmentsRouter.use(ensureAthentication);
@@ -18,20 +17,7 @@ appointmentsRouter.use(ensureAthentication);
 // });
 
 //rota principal de criar
-appointmentsRouter.post('/', async (request, response) =>{
-    
-        const { provider_id, date } = request.body;
-
-    //o que não é transformação fica dentro da rota
-    // as regras de negocio vão para o service 
-        const parseDate = parseISO(date);
-        
-
-        const createAppointment = container.resolve(CreateAppointmentsServices); //carregar o service e vai pegar as dependencias dentro do container
-        const appoitment = await createAppointment.execute({ date: parseDate , provider_id });
-
-        return response.json(appoitment);    
-})
+appointmentsRouter.post('/',appointmentsController.create)
 
 
 export default appointmentsRouter;
