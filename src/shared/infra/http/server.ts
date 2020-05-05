@@ -1,4 +1,6 @@
 import express, {Response, Request, NextFunction} from 'express';
+import '@shared/container';
+
 import 'express-async-errors';
 import routes from './routes';
 

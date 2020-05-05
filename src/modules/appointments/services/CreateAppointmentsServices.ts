@@ -1,4 +1,5 @@
 import Appoitment from '@modules/appointments/infra/typeorm/entities/Appoitments';
+import { inject, injectable } from 'tsyringe';
 import {startOfHour} from 'date-fns'
 import AppError from '@shared/error/AppError';
 import IAppoitmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
@@ -9,11 +10,13 @@ interface RequestDTO{
 }
 
 //Dependecy Inversion
-
+@injectable()
 class CreateAppointmentsServices{
 
-    constructor(private appointmentsRepository: IAppoitmentsRepository){
-    }
+    constructor(
+        @inject('AppointmentsRepository')
+        private appointmentsRepository: IAppoitmentsRepository
+    ){}
 
     public async execute({ provider_id, date }: RequestDTO): Promise<Appoitment>{
 

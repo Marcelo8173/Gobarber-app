@@ -4,6 +4,7 @@ import authConfig from '@config/Auth';
 import IUserRepository from '@modules/users/repositories/IUserRepositories';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/error/AppError';
+import { inject, injectable } from 'tsyringe';
 
 interface RequestDTO{
     email: string,
@@ -15,9 +16,13 @@ interface Response{
     token: string;
 }
 
+@injectable()
 class AuthUserServices{
 
-    constructor(private usersRepository:IUserRepository ){}
+    constructor(
+        @inject('UserRepository')
+        private usersRepository:IUserRepository 
+    ){}
 
 
     public async execute({email, password}: RequestDTO): Promise<Response>{

@@ -1,13 +1,13 @@
 import { Router, request, response } from 'express';
 import {parseISO} from 'date-fns';
-import  AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
+import { container } from 'tsyringe';
 import CreateAppointmentsServices from '@modules/appointments/services/CreateAppointmentsServices';
 
 import ensureAthentication from '@modules/users/infra/http/middlewares/ensureAthentication';
 
 const appointmentsRouter = Router();
 
-//Rota: receber uma requisição, chamar outro arquivo e devolver uma resposta
+//Rota: receber uma requisição, chamar outro arquivo e devolver uma resposta 
 
 appointmentsRouter.use(ensureAthentication);
 
@@ -26,9 +26,8 @@ appointmentsRouter.post('/', async (request, response) =>{
     // as regras de negocio vão para o service 
         const parseDate = parseISO(date);
         
-        const appointmentsRepository = new AppointmentsRepository();
 
-        const createAppointment = new CreateAppointmentsServices(appointmentsRepository);
+        const createAppointment = container.resolve(CreateAppointmentsServices); //carregar o service e vai pegar as dependencias dentro do container
         const appoitment = await createAppointment.execute({ date: parseDate , provider_id });
 
         return response.json(appoitment);    
