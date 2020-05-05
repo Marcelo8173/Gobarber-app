@@ -1,6 +1,6 @@
 import path from 'path';
-import {getRepository} from 'typeorm';
 import fs from 'fs';
+import IUserRepository from '@modules/users/repositories/IUserRepositories';
 import uploadConfig from '@config/upload';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/error/AppError';
@@ -11,10 +11,11 @@ interface RequestDTO{
 }
 
 class updateUserAvatar{
-    public async execute({user_id, avatarFilename}: RequestDTO ): Promise<User>{
-        const userRepository = getRepository(User);
+    constructor(private usersRepository:IUserRepository ){}
 
-        const user = await userRepository.findOne(user_id);
+    public async execute({user_id, avatarFilename}: RequestDTO ): Promise<User>{
+
+        const user = await this.usersRepository.findByid(user_id);
 
         if(!user){
             throw new AppError('user not authenticated, only users authenticated can update avatar', 401);
@@ -32,7 +33,7 @@ class updateUserAvatar{
        };
 
        user.avatar = avatarFilename;
-       await userRepository.save(user);
+       await this.usersRepository.save(user);
 
        return user;
     }

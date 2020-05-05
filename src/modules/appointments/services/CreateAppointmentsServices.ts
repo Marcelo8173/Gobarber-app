@@ -1,8 +1,7 @@
 import Appoitment from '@modules/appointments/infra/typeorm/entities/Appoitments';
 import {startOfHour} from 'date-fns'
-import { getCustomRepository } from 'typeorm';
 import AppError from '@shared/error/AppError';
-import AppointmentsRepository from '../repositories/AppointmentsRepository';
+import IAppoitmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 
 interface RequestDTO{
     provider_id: string,
@@ -13,23 +12,24 @@ interface RequestDTO{
 
 class CreateAppointmentsServices{
 
+    constructor(private appointmentsRepository: IAppoitmentsRepository){
+    }
+
     public async execute({ provider_id, date }: RequestDTO): Promise<Appoitment>{
-        const appointmentsRepository = getCustomRepository(AppointmentsRepository);
 
         const appoitmentsDate =  startOfHour(date);
         
-        const findAppoitmentInSameDate = await appointmentsRepository.findByDate(appoitmentsDate);
+        const findAppoitmentInSameDate = await this.appointmentsRepository.findByDate(appoitmentsDate);
 
         if(findAppoitmentInSameDate){
             throw new AppError('This appoitment is already booked');
         }
 
-        const appoitment = appointmentsRepository.create({
+        const appoitment = await this.appointmentsRepository.create({
             provider_id,
             date: appoitmentsDate, //com o DTO eu mando um objeto para criação e não parametros
         });
 
-        await appointmentsRepository.save(appoitment); //salvando no banco de dados
 
         return appoitment
     }
