@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn,CreateDateColumn,
     JoinColumn } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
 
+
 @Entity('appointments')
 class Appoitments{
     @PrimaryGeneratedColumn('uuid')
