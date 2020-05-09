@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import IUserRepository from '@modules/users/repositories/IUserRepositories';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import uploadConfig from '@config/upload';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/error/AppError';
@@ -16,7 +17,10 @@ class updateUserAvatar{
 
     constructor(
         @inject('UserRepository')
-        private usersRepository:IUserRepository 
+        private usersRepository:IUserRepository, 
+
+        @inject('StorageProvider')
+        private storageProvider:IStorageProvider 
     ){}
 
     public async execute({user_id, avatarFilename}: RequestDTO ): Promise<User>{
@@ -29,16 +33,12 @@ class updateUserAvatar{
 
        if(user.avatar){
            //deletar um avatar anterior
-            const userAvatarFile = path.join(uploadConfig.directory, user.avatar);
-            const userAvatarExists = await fs.promises.stat(userAvatarFile);
-
-            if(userAvatarExists){
-                await fs.promises.unlink(userAvatarFile);
-            };
-
+            await this.storageProvider.deleteFile(user.avatar);
        };
 
-       user.avatar = avatarFilename;
+       const fileName = await this.storageProvider.saveFile(user.avatar);
+
+       user.avatar = fileName;
        await this.usersRepository.save(user);
 
        return user;

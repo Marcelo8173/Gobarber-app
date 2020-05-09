@@ -1,5 +1,8 @@
 import 'reflect-metadata';
 import { container } from 'tsyringe';
+
+import '@modules/users/providers/index';
+import '@shared/container/providers/index';
 //service de crear agendamentos
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';

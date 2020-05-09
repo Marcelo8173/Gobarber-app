@@ -2,6 +2,7 @@ import { hash, compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import authConfig from '@config/Auth';
 import IUserRepository from '@modules/users/repositories/IUserRepositories';
+import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/error/AppError';
 import { inject, injectable } from 'tsyringe';
@@ -21,7 +22,10 @@ class AuthUserServices{
 
     constructor(
         @inject('UserRepository')
-        private usersRepository:IUserRepository 
+        private usersRepository:IUserRepository, 
+
+        @inject('HashProvider')
+        private hashProvider:IHashProvider
     ){}
 
 
@@ -33,7 +37,7 @@ class AuthUserServices{
         };
 
         //senha criptografada user.password
-        const passwordMatched = await compare(password, user.password);
+        const passwordMatched = await this.hashProvider.compareHash(password, user.password); 
 
         if(!passwordMatched){
             throw new AppError('Incorrect email/password combination', 401);
