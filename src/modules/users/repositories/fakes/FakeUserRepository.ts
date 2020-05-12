@@ -11,23 +11,23 @@ class  UsersFakeRepository implements IUserRepositories{
     private users: User[] = [];
 
     public async findByid(id: string): Promise<User | undefined>{
-       const findUser = await this.users.find(user =>{
-           user.id === id;
-       });
+       
+        const findUser = this.users.find(user => user.id === id);
        
        return findUser;
     };
 
     public async findByEmail(email: string): Promise<User | undefined>{
         
-        const findUser = await this.users.find(user =>{
-            user.email === email;
-        });
+        const findUser = this.users.find(user =>
+            user.email === email
+        );
         
         return findUser;
     }
     
     public async create({email, name, password}:ICreateUsersDTO): Promise<User>{
+        
         const user = new User();
         
         Object.assign(user, {id: uuid(), email, name, password});
@@ -39,7 +39,7 @@ class  UsersFakeRepository implements IUserRepositories{
 
     public async save(user: User): Promise<User>{
        
-        const findIndex = await this.users.findIndex(findUser =>
+        const findIndex = this.users.findIndex(findUser =>
             findUser.id === user.id 
             );
 

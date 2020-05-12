@@ -11,6 +11,9 @@ import AppointmentsRepository from '@modules/appointments/infra/typeorm/reposito
 import IUserRepositories from '@modules/users/repositories/IUserRepositories';
 import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
 
+
+
+
 container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', AppointmentsRepository);
 // apenas o register ele cria uma instancia da classe toda vez que ele é chamado
 //com o singleton ele cria apenas uma instacia apenas uma vez e toda vez que ele for chamado ele usa a instancia já criada
