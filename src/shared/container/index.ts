@@ -12,6 +12,11 @@ import IUserRepositories from '@modules/users/repositories/IUserRepositories';
 import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
 
 
+import IUserTokenRepositories from '@modules/users/repositories/IUserTokenRepositories';
+import UserTokenRepositories from '@modules/users/infra/typeorm/repositories/UserTokenRepository';
+
+
+
 
 
 container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', AppointmentsRepository);
@@ -19,3 +24,5 @@ container.registerSingleton<IAppointmentsRepository>('AppointmentsRepository', A
 //com o singleton ele cria apenas uma instacia apenas uma vez e toda vez que ele for chamado ele usa a instancia já criada
 
 container.registerSingleton<IUserRepositories>('UserRepository', UserRepository);
+
+container.registerSingleton<IUserTokenRepositories>('UserTokenRepositories', UserTokenRepositories);
