@@ -4,8 +4,8 @@ import IMailTempplateDTO from '@shared/container/providers/MailTemplateEmailProv
 
 class FakeMailTemplate implements IMailTemplateEmailProvider{
     
-    public async parse({template}:IMailTempplateDTO): Promise<string>{
-        return template;
+    public async parse(): Promise<string>{
+        return 'Mail content';
     }
 };
 

@@ -1,4 +1,5 @@
 import AppError from '@shared/error/AppError';
+import path from 'path';
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import IUserRepository from '@modules/users/repositories/IUserRepositories';
 import IUserTokenRepositories from '@modules/users/repositories/IUserTokenRepositories';
@@ -32,7 +33,10 @@ class SendForgotEmailPasswordService{
         }
 
         const { token} = await this.userToken.generate(user.id);
-        
+        //passando o caminho do template de email
+        const forgotPasswordTemplate = path.resolve(__dirname, '..','views', 'Forgot_Password.hbs')
+
+
        await this.mailProvider.sendMail({
            to:{
                name: user.name,
@@ -40,10 +44,10 @@ class SendForgotEmailPasswordService{
            },
            subject: '[GoBarber] Recuperação de senha ',
            templateData:{
-               template: 'Olá, {{name}} : {{token}}',
+               file: forgotPasswordTemplate,
                variables:{
                    name: user.name,
-                   token,
+                   link: `http://localhost:3000/reset_password?token=${token}`
                }
            }
        });
