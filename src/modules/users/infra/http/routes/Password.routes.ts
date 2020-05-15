@@ -5,6 +5,7 @@ import ResetPasswordController from '@modules/users/infra/http/controllers/Reset
 
 
 const passwordRoutes = Router();
+
 const forgotPassworController = new ForgotPassworController();
 const resetPasswordController = new ResetPasswordController();
 //rota principal de criar
