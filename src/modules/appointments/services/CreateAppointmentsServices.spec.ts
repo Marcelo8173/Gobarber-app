@@ -11,6 +11,7 @@ describe('CreateAppointments', () =>{
         const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository);
         
         const appointment = await createAppointments.execute({
+            user_id: '123123',
             date: new Date(),
             provider_id: '123123',
         });
@@ -26,11 +27,13 @@ describe('CreateAppointments', () =>{
         const appointmentDate = new Date(2020, 5,10,11);
 
         await createAppointments.execute({
+            user_id: '123123',
             date: appointmentDate,
             provider_id: '123123',
         });
 
         expect(createAppointments.execute({
+            user_id: '123123',
             date: appointmentDate,
             provider_id: '123123',
         })).rejects.toBeInstanceOf(AppError);

@@ -16,6 +16,13 @@ class Appoitments{
     @JoinColumn({name: 'provider_id'})
     provider: User;
 
+    @Column()
+    user_id: string;
+    
+    @ManyToOne(() => User) //relacionamento 
+    @JoinColumn({name: 'user_id'})
+    user: User;
+
     @Column('time with time zone')
     date: Date;
 

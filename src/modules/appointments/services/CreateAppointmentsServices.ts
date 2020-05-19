@@ -5,8 +5,9 @@ import AppError from '@shared/error/AppError';
 import IAppoitmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 
 interface RequestDTO{
-    provider_id: string,
-    date: Date, 
+    provider_id: string;
+    user_id:string;
+    date: Date; 
 }
 
 //Dependecy Inversion
@@ -18,7 +19,7 @@ class CreateAppointmentsServices{
         private appointmentsRepository: IAppoitmentsRepository
     ){}
 
-    public async execute({ provider_id, date }: RequestDTO): Promise<Appoitment>{
+    public async execute({ provider_id, user_id, date }: RequestDTO): Promise<Appoitment>{
 
         const appoitmentsDate =  startOfHour(date);
         
@@ -30,6 +31,7 @@ class CreateAppointmentsServices{
 
         const appoitment = await this.appointmentsRepository.create({
             provider_id,
+            user_id,
             date: appoitmentsDate, //com o DTO eu mando um objeto para criação e não parametros
         });
 
