@@ -23,7 +23,7 @@ class Appoitments{
     @JoinColumn({name: 'user_id'})
     user: User;
 
-    @Column('time with time zone')
+    @Column('timestamp with time zone')
     date: Date;
 
     @CreateDateColumn()

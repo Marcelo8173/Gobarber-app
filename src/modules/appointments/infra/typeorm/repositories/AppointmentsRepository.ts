@@ -18,7 +18,7 @@ class  AppointmentsRepository implements IAppoitmentsRepositories{
     public async finAllInMonthFromProvider( {provider_id, mouth, year} :IFindAllInMonthFromProviderDTO): Promise<Appointment[]>{
        const parsedMouth = String(mouth).padStart(2, '0');
        
-        const appointment = this.ormRepository.find({
+        const appointment = await this.ormRepository.find({
             where: {
                 provider_id,
                 date: Raw(dateFieldName =>
@@ -36,7 +36,7 @@ class  AppointmentsRepository implements IAppoitmentsRepositories{
         const parsedDay = String(day).padStart(2, '0');
         const parsedMouth = String(month).padStart(2, '0');
         
-         const appointment = this.ormRepository.find({
+         const appointment = await this.ormRepository.find({
              where: {
                  provider_id,
                  date: Raw(dateFieldName =>
@@ -58,7 +58,7 @@ class  AppointmentsRepository implements IAppoitmentsRepositories{
     };
     
     public async create({ date, user_id ,provider_id}:ICreateAppoitments): Promise<Appointment>{
-        const appointment = this.ormRepository.create({
+        const appointment = await this.ormRepository.create({
             provider_id,
             user_id,
             date,
