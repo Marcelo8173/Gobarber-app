@@ -1,6 +1,7 @@
 import Appoitment from '@modules/appointments/infra/typeorm/entities/Appoitments';
 import { inject, injectable } from 'tsyringe';
-import {startOfHour, isBefore, getHours} from 'date-fns'
+import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import {startOfHour, isBefore, getHours, format} from 'date-fns'
 import AppError from '@shared/error/AppError';
 import IAppoitmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 
@@ -16,7 +17,10 @@ class CreateAppointmentsServices{
 
     constructor(
         @inject('AppointmentsRepository')
-        private appointmentsRepository: IAppoitmentsRepository
+        private appointmentsRepository: IAppoitmentsRepository,
+
+        @inject('NotificationsRepository')
+        private notificationsRepository : INotificationsRepository
     ){}
 
     public async execute({ provider_id, user_id, date }: RequestDTO): Promise<Appoitment>{
@@ -51,8 +55,14 @@ class CreateAppointmentsServices{
             date: appoitmentsDate, //com o DTO eu mando um objeto para criação e não parametros
         });
 
+        const formated = format(appoitmentsDate, "dd/MM/yyyy 'às' HH:mm'h'")
+        
+        await this.notificationsRepository.create({
+            recipient_id: provider_id,
+            content: `Novo agendamento para ${formated}`
+        })
 
-        return appoitment
+        return appoitment;
     }
 }
 
