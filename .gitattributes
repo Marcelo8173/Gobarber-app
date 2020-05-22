@@ -1,3 +1,2 @@
-* linguist-vendored
 *.HTML linguist-vendored=false
 *.TypeScript linguist-detectable=true
