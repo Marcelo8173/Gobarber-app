@@ -1,2 +1,3 @@
-*.HTML linguist-vendored=false
-*.TypeScript linguist-detectable=true
+dist/* linguist-vendored
+
+*.HTML linguist-language=TypeScript
