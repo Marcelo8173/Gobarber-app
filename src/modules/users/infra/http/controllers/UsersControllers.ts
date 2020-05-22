@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import userService from '@modules/users/services/CreateUSerService';
 import { container } from 'tsyringe';
-import UpdateAvatarUserService from '@modules/users/services/updateUserAvatar';
+import { classToClass } from 'class-transformer';
 
 
 
@@ -19,7 +19,7 @@ export default class UsersControllers{
     
             delete user.password;
             
-            return response.json(user);
+            return response.json(classToClass(user));
     
         } catch (err) {
             return response.status(400).json({error: err.message})

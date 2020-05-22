@@ -1,8 +1,6 @@
-import path from 'path';
-import fs from 'fs';
+
 import IUserRepository from '@modules/users/repositories/IUserRepositories';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
-import uploadConfig from '@config/upload';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/error/AppError';
 import { inject, injectable } from 'tsyringe';
@@ -36,7 +34,7 @@ class updateUserAvatar{
             await this.storageProvider.deleteFile(user.avatar);
        };
 
-       const fileName = await this.storageProvider.saveFile(user.avatar);
+       const fileName = await this.storageProvider.saveFile(avatarFilename);
 
        user.avatar = fileName;
        await this.usersRepository.save(user);
