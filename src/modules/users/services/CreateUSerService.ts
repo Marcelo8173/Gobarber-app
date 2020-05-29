@@ -1,5 +1,6 @@
 import User from '@modules/users/infra/typeorm/entities/User';
 import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
+import ICacheProvider from '@shared/container/providers/CachedProvider/models/ICacheProvider';
 import AppError from '@shared/error/AppError';
 import IUserRepository from '@modules/users/repositories/IUserRepositories';
 import { inject, injectable } from 'tsyringe';
@@ -19,6 +20,9 @@ class CreateUSerService{
 
         @inject('HashProvider')
         private hashProvider: IHashProvider,
+
+        @inject('RedisCacheProvider')
+       private cacheProvider: ICacheProvider,       
     ){}
 
 
@@ -37,6 +41,8 @@ class CreateUSerService{
             email,
             password: hashPassword
         })
+
+        await this.cacheProvider.ivalidatePrefix('Providers-list:*');
 
 
         return user;

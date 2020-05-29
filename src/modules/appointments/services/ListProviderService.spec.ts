@@ -1,14 +1,19 @@
 import AppError from '@shared/error/AppError';
 import FakeUsersRepositories from '@modules/users/repositories/fakes/FakeUserRepository';
+import FakeCacheProvider from "@shared/container/providers/CachedProvider/fakes/FakeRedisCacheProvider";
+
 import ListProviderService from "@modules/appointments/services/ListProviderService";
 
 let fakeUsersRepositories: FakeUsersRepositories;
 let listProviderService: ListProviderService;
+let fakeCacheProvider: FakeCacheProvider;
+
 
 describe('LisProviderService', ()=>{
     beforeEach(()=>{
         fakeUsersRepositories = new FakeUsersRepositories();
-        listProviderService = new ListProviderService(fakeUsersRepositories);
+        fakeCacheProvider = new FakeCacheProvider();
+        listProviderService = new ListProviderService(fakeUsersRepositories,fakeCacheProvider);
     })
     it('should be able to list the providers', async ()=>{
         const user1 = await fakeUsersRepositories.create({

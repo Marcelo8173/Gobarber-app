@@ -11,11 +11,11 @@ export default class AppointmentController{
 
     //o que não é transformação fica dentro da rota
     // as regras de negocio vão para o service 
-        const parseDate = parseISO(date);
+        // const parseDate = parseISO(date);
         
 
         const createAppointment = container.resolve(CreateAppointmentsServices); //carregar o service e vai pegar as dependencias dentro do container
-        const appoitment = await createAppointment.execute({ date: parseDate, user_id, provider_id });
+        const appoitment = await createAppointment.execute({ date: date, user_id, provider_id });
 
         return response.json(appoitment);    
     }

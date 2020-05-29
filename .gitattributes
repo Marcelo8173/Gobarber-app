@@ -1,5 +1,0 @@
-dist/* linguist-vendored
-Forgot_Password.hbs linguist-vendored = true
-*.HTML linguist-language=TypeScript
-*.hbs linguist-language=TypeScript
-

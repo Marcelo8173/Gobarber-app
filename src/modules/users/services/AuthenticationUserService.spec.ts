@@ -1,6 +1,8 @@
 import AppError from '@shared/error/AppError';
 import FakeUsersRepositories from '../repositories/fakes/FakeUserRepository';
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
+import FakeCacheProvider from "@shared/container/providers/CachedProvider/fakes/FakeRedisCacheProvider";
+
 import AuthUserService from './AuthUserServices';
 import CreateUserService from './CreateUSerService';
 
@@ -10,8 +12,9 @@ describe('AuthenticateUser', () =>{
     it('should be able to authenticate', async () =>{
         const fakeUser = new FakeUsersRepositories();
         const fakeHashProvider = new FakeHashProvider();
-        
-        const createUSer = new CreateUserService(fakeUser, fakeHashProvider);
+        const fakeCacheProvider = new FakeCacheProvider();
+
+        const createUSer = new CreateUserService(fakeUser, fakeHashProvider,fakeCacheProvider);
         const authenticateUser = new AuthUserService(fakeUser, fakeHashProvider);
 
         const user = await createUSer.execute({
@@ -21,7 +24,6 @@ describe('AuthenticateUser', () =>{
         })
 
 
-        const response = await 
 
         expect(authenticateUser.execute({
             email: 'marcelobio@gmail.com',
@@ -46,8 +48,9 @@ describe('AuthenticateUser', () =>{
     it('should not be able to authenticate wiht wrong password', async () =>{
         const fakeUser = new FakeUsersRepositories();
         const fakeHashProvider = new FakeHashProvider();
-        
-        const createUSer = new CreateUserService(fakeUser, fakeHashProvider);
+        const fakeCacheProvider = new FakeCacheProvider();
+
+        const createUSer = new CreateUserService(fakeUser, fakeHashProvider,fakeCacheProvider);
         const authenticateUser = new AuthUserService(fakeUser, fakeHashProvider);
 
         const user = await createUSer.execute({

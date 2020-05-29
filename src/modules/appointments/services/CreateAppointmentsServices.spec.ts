@@ -1,8 +1,8 @@
 import AppError from '@shared/error/AppError';
 import FakeAppointmentsRepositories from '../repositories/fakes/FakeAppointmentRepository';
+import FakeCacheProvider from "@shared/container/providers/CachedProvider/fakes/FakeRedisCacheProvider";
 import CreateAppointmentsServices from './CreateAppointmentsServices';
 import FakeAppointmentsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
-import { getTime } from 'date-fns';
 
 //o ideal que o teste não dependa de mais nada, apenas dele
 describe('CreateAppointments', () =>{
@@ -11,7 +11,8 @@ describe('CreateAppointments', () =>{
 
         const fakeAppointmentRepository = new FakeAppointmentsRepositories();
         const fakeAppointmentsRepository = new FakeAppointmentsRepository()
-        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository);
+        const fakeCacheProvider = new FakeCacheProvider();
+        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository,fakeCacheProvider);
         
         jest.spyOn(Date, 'now').mockImplementationOnce(() =>{
             return new Date(2020, 4, 10, 12).getTime();
@@ -31,8 +32,10 @@ describe('CreateAppointments', () =>{
     it('Should not be able to create two appointments on the same time', async () =>{
         const fakeAppointmentRepository = new FakeAppointmentsRepositories();
         const fakeAppointmentsRepository = new FakeAppointmentsRepository()
+        const fakeCacheProvider = new FakeCacheProvider();
 
-        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository);
+
+        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository,fakeCacheProvider);
         
         const appointmentDate = new Date(2020, 5,10,11);
 
@@ -52,8 +55,9 @@ describe('CreateAppointments', () =>{
     it('Should not be able to create an appointments on a past date', async () =>{
         const fakeAppointmentRepository = new FakeAppointmentsRepositories();
         const fakeAppointmentsRepository = new FakeAppointmentsRepository()
+        const fakeCacheProvider = new FakeCacheProvider();
 
-        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository);
+        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository,fakeCacheProvider);
         
        jest.spyOn(Date, 'now').mockImplementationOnce(() =>{
            return new Date(2020, 4, 10, 12).getTime();
@@ -71,8 +75,10 @@ describe('CreateAppointments', () =>{
     it('Should not be able to create an appointment with same user as provider', async () =>{
         const fakeAppointmentRepository = new FakeAppointmentsRepositories();
         const fakeAppointmentsRepository = new FakeAppointmentsRepository()
+        const fakeCacheProvider = new FakeCacheProvider();
 
-        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository);
+
+        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository,fakeCacheProvider);
         
        jest.spyOn(Date, 'now').mockImplementationOnce(() =>{
            return new Date(2020, 4, 10, 12).getTime();
@@ -90,9 +96,11 @@ describe('CreateAppointments', () =>{
 
     it('Should not be able to create an appointment before the 8 a.m and after 17 p.m', async () =>{
         const fakeAppointmentRepository = new FakeAppointmentsRepositories();
-        const fakeAppointmentsRepository = new FakeAppointmentsRepository()
+        const fakeAppointmentsRepository = new FakeAppointmentsRepository();
+        const fakeCacheProvider = new FakeCacheProvider();
 
-        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository);
+
+        const createAppointments = new CreateAppointmentsServices(fakeAppointmentRepository,fakeAppointmentsRepository,fakeCacheProvider);
         
        jest.spyOn(Date, 'now').mockImplementationOnce(() =>{
            return new Date(2020, 4, 10, 12).getTime();

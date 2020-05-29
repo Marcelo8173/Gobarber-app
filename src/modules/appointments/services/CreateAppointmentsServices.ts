@@ -1,6 +1,7 @@
 import Appoitment from '@modules/appointments/infra/typeorm/entities/Appoitments';
 import { inject, injectable } from 'tsyringe';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import ICacheProvider from '@shared/container/providers/CachedProvider/models/ICacheProvider';
 import {startOfHour, isBefore, getHours, format} from 'date-fns'
 import AppError from '@shared/error/AppError';
 import IAppoitmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
@@ -20,7 +21,10 @@ class CreateAppointmentsServices{
         private appointmentsRepository: IAppoitmentsRepository,
 
         @inject('NotificationsRepository')
-        private notificationsRepository : INotificationsRepository
+        private notificationsRepository : INotificationsRepository,
+
+        @inject('RedisCacheProvider')
+        private cacheProvider: ICacheProvider,    
     ){}
 
     public async execute({ provider_id, user_id, date }: RequestDTO): Promise<Appoitment>{
@@ -61,6 +65,10 @@ class CreateAppointmentsServices{
             recipient_id: provider_id,
             content: `Novo agendamento para ${formated}`
         })
+
+        await this.cacheProvider.invalidate(
+            `provider-appointments:${provider_id}:${format(appoitmentsDate,
+                'yyyy-M-d')}`);
 
         return appoitment;
     }
