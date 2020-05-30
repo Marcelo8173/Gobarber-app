@@ -5,7 +5,7 @@ import '@shared/container';
 
 import 'express-async-errors';
 import uploadConfig from '@config/upload';
-
+import rateLimit from '@shared/infra/http/middlewares/rateLimiter';
 import routes from './routes';
 
 import cors from 'cors';
@@ -15,6 +15,7 @@ import AppError from '@shared/error/AppError';
 
 const app = express();
 
+app.use(rateLimit);
 app.use(cors());
 
 app.use(express.json());
